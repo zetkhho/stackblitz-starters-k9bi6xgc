@@ -2,55 +2,50 @@
 // where your node app starts
 
 // init project
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
 // enable CORS so that your API is remotely testable by FCC
-var cors = require('cors');
+const cors = require('cors');
 app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
 
 // serve static files from /public
 app.use(express.static('public'));
 
 // root endpoint → serve index.html
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 // test endpoint
-app.get('/api/hello', function (req, res) {
+app.get('/api/hello', (req, res) => {
   res.json({ greeting: 'hello API' });
 });
 
 // timestamp microservice endpoint
-app.get('/api/:date?', function (req, res) {
-  var dateParam = req.params.date;
+app.get('/api/:date?', (req, res) => {
+  const dateParam = req.params.date;
+  let date;
 
-  // if no date is provided → current time
   if (!dateParam) {
-    var now = new Date();
-    return res.json({
-      unix: now.getTime(),
-      utc: now.toUTCString(),
-    });
-  }
-
-  var date;
-
-  // if dateParam is all digits → treat as timestamp
-  if (/^\d+$/.test(dateParam)) {
-    date = new Date(parseInt(dateParam));
+    // No date provided → return current time
+    date = new Date();
   } else {
-    // otherwise treat as date string
-    date = new Date(dateParam);
+    // If numeric, treat as timestamp (milliseconds)
+    if (!isNaN(dateParam)) {
+      date = new Date(Number(dateParam));
+    } else {
+      // Otherwise, treat as date string
+      date = new Date(dateParam);
+    }
   }
 
-  // invalid date
+  // Validate date
   if (date.toString() === 'Invalid Date') {
     return res.json({ error: 'Invalid Date' });
   }
 
-  // valid date response
+  // Return JSON response
   res.json({
     unix: date.getTime(),
     utc: date.toUTCString(),
@@ -58,6 +53,7 @@ app.get('/api/:date?', function (req, res) {
 });
 
 // listen on port set in environment variable or default to 3000
-var listener = app.listen(process.env.PORT || 3000, function () {
+const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
