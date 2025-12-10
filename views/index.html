@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Timestamp Microservice | Villalba Ezequiel</title>
+    <link
+      rel="shortcut icon"
+      href="https://cdn-icons-png.flaticon.com/512/25/25231.png"
+      type="image/x-icon"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="/style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Timestamp Microservice</h1>
+    <hr />
+
+    <div class="container">
+      <h2>Enter a Date or Timestamp:</h2>
+
+      <div class="examples">
+        <input
+          type="text"
+          id="dateInput"
+          placeholder="YYYY-MM-DD or timestamp"
+        />
+        <button onclick="fetchInput()">Submit</button>
+      </div>
+
+      <h2>API Response:</h2>
+      <pre
+        id="output"
+      ><code>{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}</code></pre>
+    </div>
+
+    <div class="footer">
+      <p>
+        By
+        <a href="https://github.com/EzequielVillalba" target="_blank"
+          >Villalba Ezequiel</a
+        >
+      </p>
+    </div>
+
+    <script>
+      function fetchInput() {
+        const dateParam = document.getElementById('dateInput').value.trim();
+        let url = '/api/' + dateParam;
+
+        // Si el input está vacío, usamos la fecha actual
+        if (dateParam === '') url = '/api';
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById('output').innerHTML =
+              '<code>' + JSON.stringify(data) + '</code>';
+          })
+          .catch((err) => {
+            document.getElementById('output').innerHTML =
+              '<code>{"error":"Could not fetch"}</code>';
+          });
+      }
+    </script>
+  </body>
+</html>
