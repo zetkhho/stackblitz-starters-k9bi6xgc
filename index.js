@@ -1,23 +1,17 @@
 // index.js
-// where your node app starts
 
-// init project
 const express = require('express');
 const app = express();
 
-// enable CORS so that your API is remotely testable by FCC
 const cors = require('cors');
-app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
+app.use(cors({ optionsSuccessStatus: 200 })); 
 
-// serve static files from /public
 app.use(express.static('public'));
 
-// root endpoint → serve index.html
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// test endpoint
 app.get('/api/hello', (req, res) => {
   res.json({ greeting: 'hello API' });
 });
@@ -56,4 +50,5 @@ app.get('/api/:date?', (req, res) => {
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
 
